@@ -3,12 +3,12 @@ export interface AppContextType {
   fireLocations: FireLocationType[];
   dangerLevel: Boolean;
   updateUserLocation: (location: UserLocationType) => void;
-  updateFireLocation: (fire: FireLocationType) => void;
+  updateFireLocation: (fire: FireLocationType[]) => void;
   updateDangerLevel: (level: Boolean) => void;
 }
 
 export interface FireLocationType {
-  id: String;
+  id: string;
   long: number;
   lat: number;
 }

@@ -31,8 +31,8 @@ export default function App() {
   const updateUserLocation = (location: UserLocationType) => {
     setUserLocation({long: location.long, lat: location.lat});
   };
-  const updateFireLocation = (fire: FireLocationType) => {
-    setFireLocations([...fireLocations, fire]);
+  const updateFireLocation = (fire: FireLocationType[]) => {
+    setFireLocations([...fireLocations, ...fire]);
   };
   const updateDangerLevel = (level: Boolean) => {
     setDangerLevel(level);

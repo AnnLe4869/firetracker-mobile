@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {View, StyleSheet, Text, Image, PermissionsAndroid} from 'react-native';
+import {View, StyleSheet, Image, PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 import AppContext from '../context/index';
@@ -55,7 +55,6 @@ export default function Welcome() {
 
   return (
     <View style={styles.welcomeView}>
-      <Text>Hello from welcome</Text>
       <Image source={require('./appLogo.png')} style={styles.logo} />
     </View>
   );

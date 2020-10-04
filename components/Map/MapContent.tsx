@@ -1,11 +1,74 @@
-import React, {useContext} from 'react';
-import {View, StyleSheet} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import React, {useContext, useEffect} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
 
 import AppContext from '../context/index';
 
 export default function Map() {
-  const {userLocation} = useContext(AppContext);
+  const {
+    userLocation,
+    fireLocations,
+    dangerLevel,
+    updateFireLocation,
+    updateDangerLevel,
+    updateUserLocation,
+  } = useContext(AppContext);
+
+  // Update user location every 1 minutes
+  useEffect(() => {
+    setInterval(() => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          fetch(
+            `https://us-central1-vandycloudfires.cloudfunctions.net/shouldEvacuate?lon=${position.coords.longitude}&lat=${position.coords.latitude}`,
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              updateUserLocation({
+                long: position.coords.longitude,
+                lat: position.coords.latitude,
+              });
+              updateDangerLevel(data.shouldEvacuate);
+            })
+            .catch((err) => console.error(err));
+        },
+        (error) => {
+          console.log(error.code, error.message);
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    }, 1000 * 60 * 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Update the fire location every 1 minutes
+  useEffect(() => {
+    setInterval(() => {
+      fetch('https://us-central1-vandycloudfires.cloudfunctions.net/getFires')
+        .then((res) => res.json())
+        .then((data) => {
+          const locations = data.map((location: any) => {
+            return {
+              id: location.id,
+              long: parseFloat(location.long),
+              lat: parseFloat(location.lat),
+            };
+          });
+          updateFireLocation(locations);
+        })
+        .catch((err) => console.error(err));
+    }, 1000 * 60 * 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Throw alert if the user is close to danger
+  useEffect(() => {
+    if (dangerLevel) {
+      Alert.alert('Evacuate now', 'You are in close vicinity of a wildfire');
+    }
+  });
+
   return (
     <View style={styles.container}>
       <MapView
@@ -17,8 +80,20 @@ export default function Map() {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        showsUserLocation={true}
-      />
+        showsUserLocation={true}>
+        {fireLocations.length > 1
+          ? fireLocations.map((location) => (
+              <Marker
+                key={location.id}
+                coordinate={{
+                  longitude: location.long,
+                  latitude: location.lat,
+                }}
+              />
+            ))
+          : null}
+        {}
+      </MapView>
     </View>
   );
 }

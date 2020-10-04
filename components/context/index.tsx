@@ -9,7 +9,7 @@ export const blankData = {
   fireLocations: [{id: '', long: 0, lat: 0}],
   dangerLevel: false,
   updateUserLocation: (_: UserLocationType) => {},
-  updateFireLocation: (_: FireLocationType) => {},
+  updateFireLocation: (_: FireLocationType[]) => {},
   updateDangerLevel: (_: Boolean) => {},
 };
 export default createContext<AppContextType>(blankData);
