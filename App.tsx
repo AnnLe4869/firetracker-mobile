@@ -49,8 +49,7 @@ export default function App() {
         updateDangerLevel,
       }}>
       <SafeAreaView style={styles.container}>
-        <Welcome />
-        {/* {userLocation.long !== 0 ? <MapContent /> : <Welcome />} */}
+        {userLocation.long !== 0 ? <MapContent /> : <Welcome />}
         <Notification />
       </SafeAreaView>
     </AppContext.Provider>

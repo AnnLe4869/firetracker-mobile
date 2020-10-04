@@ -9,10 +9,10 @@ export interface AppContextType {
 
 export interface FireLocationType {
   id: String;
-  long: Number;
-  lat: Number;
+  long: number;
+  lat: number;
 }
 export interface UserLocationType {
-  long: Number;
-  lat: Number;
+  long: number;
+  lat: number;
 }
