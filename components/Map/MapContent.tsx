@@ -25,11 +25,18 @@ export default function Map() {
           )
             .then((res) => res.json())
             .then((data) => {
-              updateUserLocation({
-                long: position.coords.longitude,
-                lat: position.coords.latitude,
-              });
-              updateDangerLevel(data.shouldEvacuate);
+              if (
+                userLocation.long !== position.coords.longitude &&
+                userLocation.lat !== position.coords.latitude
+              ) {
+                updateUserLocation({
+                  long: position.coords.longitude,
+                  lat: position.coords.latitude,
+                });
+              }
+              if (dangerLevel !== data.shouldEvacuate) {
+                updateDangerLevel(data.shouldEvacuate);
+              }
             })
             .catch((err) => console.error(err));
         },
@@ -44,21 +51,19 @@ export default function Map() {
 
   // Update the fire location every 1 minutes
   useEffect(() => {
-    setInterval(() => {
-      fetch('https://us-central1-vandycloudfires.cloudfunctions.net/getFires')
-        .then((res) => res.json())
-        .then((data) => {
-          const locations = data.map((location: any) => {
-            return {
-              id: location.id,
-              long: parseFloat(location.long),
-              lat: parseFloat(location.lat),
-            };
-          });
-          updateFireLocation(locations);
-        })
-        .catch((err) => console.error(err));
-    }, 1000 * 60 * 1);
+    fetch('https://us-central1-vandycloudfires.cloudfunctions.net/getFires')
+      .then((res) => res.json())
+      .then((data) => {
+        const locations = data.map((location: any) => {
+          return {
+            id: location.id,
+            long: parseFloat(location.long),
+            lat: parseFloat(location.lat),
+          };
+        });
+        updateFireLocation(locations);
+      })
+      .catch((err) => console.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

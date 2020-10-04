@@ -50,7 +50,7 @@ export default function App() {
       }}>
       <SafeAreaView style={styles.container}>
         {userLocation.long !== 0 ? <MapContent /> : <Welcome />}
-        <Notification />
+        {/* <Notification /> */}
       </SafeAreaView>
     </AppContext.Provider>
   );
