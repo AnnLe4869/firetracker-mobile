@@ -1,18 +1,18 @@
 export interface AppContextType {
   userLocation: UserLocationType;
   fireLocations: FireLocationType[];
-  dangerLevel: Number;
+  dangerLevel: Boolean;
   updateUserLocation: (location: UserLocationType) => void;
   updateFireLocation: (fire: FireLocationType) => void;
-  updateDangerLevel: (level: Number) => void;
+  updateDangerLevel: (level: Boolean) => void;
 }
 
 export interface FireLocationType {
   id: String;
-  long: String;
-  lat: String;
+  long: Number;
+  lat: Number;
 }
 export interface UserLocationType {
-  long: String;
-  lat: String;
+  long: Number;
+  lat: Number;
 }

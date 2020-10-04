@@ -1,31 +1,27 @@
 import React, {useContext, useEffect} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Image} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 import AppContext from '../context/index';
 
 export default function Welcome() {
-  const {updateDangerLevel} = useContext(AppContext);
+  const {updateDangerLevel, updateUserLocation} = useContext(AppContext);
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
       (position) => {
         fetch(
-          `/userLocation?long=${position.coords.longitude}lat=${position.coords.latitude}`,
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            method: 'POST',
-            body: JSON.stringify({
-              lat: position.coords.latitude,
-              long: position.coords.longitude,
-            }),
-          },
+          `https://us-central1-vandycloudfires.cloudfunctions.net/shouldEvacuate?lon=${position.coords.longitude}&lat=${position.coords.latitude}`,
         )
           .then((res) => res.json())
-          .then((data) => updateDangerLevel(data.shouldEvacuate))
+          .then((data) => {
+            updateUserLocation({
+              long: position.coords.longitude,
+              lat: position.coords.latitude,
+            });
+            updateDangerLevel(data.shouldEvacuate);
+            console.log(position);
+          })
           .catch((err) => console.error(err));
       },
       (error) => {
@@ -33,12 +29,13 @@ export default function Welcome() {
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
-  }, [updateDangerLevel]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View style={styles.welcomeView}>
       <Text>Hello from welcome</Text>
-      {/* <Image source={require("../../assets/appLogo.png")} style={styles.logo} /> */}
+      <Image source={require('./appLogo.png')} style={styles.logo} />
     </View>
   );
 }

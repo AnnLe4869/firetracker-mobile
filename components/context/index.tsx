@@ -1,19 +1,15 @@
-import { createContext } from "react";
-import {
-  UserLocationType,
-  FireLocationType,
-  AppContextType
-} from "../type/type";
+import {createContext} from 'react';
+import {UserLocationType, FireLocationType, AppContextType} from '../type/type';
 
 export const blankData = {
   userLocation: {
-    long: "",
-    lat: ""
+    long: 0,
+    lat: 0,
   },
-  fireLocations: [{ id: "", long: "", lat: "" }],
-  dangerLevel: 0,
+  fireLocations: [{id: '', long: 0, lat: 0}],
+  dangerLevel: false,
   updateUserLocation: (_: UserLocationType) => {},
   updateFireLocation: (_: FireLocationType) => {},
-  updateDangerLevel: (_: Number) => {}
+  updateDangerLevel: (_: Boolean) => {},
 };
 export default createContext<AppContextType>(blankData);

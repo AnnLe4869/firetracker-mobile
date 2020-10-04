@@ -24,7 +24,9 @@ export default function App() {
   const [fireLocations, setFireLocations] = useState<FireLocationType[]>(
     blankData.fireLocations,
   );
-  const [dangerLevel, setDangerLevel] = useState<Number>(blankData.dangerLevel);
+  const [dangerLevel, setDangerLevel] = useState<Boolean>(
+    blankData.dangerLevel,
+  );
 
   const updateUserLocation = (location: UserLocationType) => {
     setUserLocation({long: location.long, lat: location.lat});
@@ -32,7 +34,7 @@ export default function App() {
   const updateFireLocation = (fire: FireLocationType) => {
     setFireLocations([...fireLocations, fire]);
   };
-  const updateDangerLevel = (level: Number) => {
+  const updateDangerLevel = (level: Boolean) => {
     setDangerLevel(level);
   };
 
@@ -47,7 +49,8 @@ export default function App() {
         updateDangerLevel,
       }}>
       <SafeAreaView style={styles.container}>
-        {userLocation.long !== '' ? <MapContent /> : <Welcome />}
+        <Welcome />
+        {/* {userLocation.long !== 0 ? <MapContent /> : <Welcome />} */}
         <Notification />
       </SafeAreaView>
     </AppContext.Provider>
